@@ -1,12 +1,10 @@
 $(function () {
-    var delete_tag = '<img class="delete_slide" src="https://evgeniyvorobev.github.io/tilda_slider_add_remove/img/delete_2.png">';
-
+    var delete_tag = '<img class="delete_slide" src="https://sergeislider.github.io/slider_tilda/img/delete_2.png">';
     window.$selected_slider;
     window.$element_clicked;
     window.$lastSlide;
     window.slider_current = 0;
     window.$current_slider = '';
-
     $('.slick_sliders').slick({
         slidesToShow: 1,
         slidesToScroll: 1,
@@ -28,7 +26,6 @@ $(function () {
             </svg>
         </div>`
     })
-
     $('.slick_sliders').on('swipe', function(event, slick, currentSlide, nextSlide){
         console.log('это слайдер slick', slick.$slider)
         $current_slider = slick.$slider;
@@ -44,7 +41,6 @@ $(function () {
     });
 
     $('.slick_sliders').on('swipe', function(event, slick, currentSlide, nextSlide){
-        console.log('это слайдер slick', slick.$slider)
         $current_slider.find('.delete_slide').hide();
         if ($current_slider.find('img.img_original.slick-slide.slick-current.slick-active').is('.hovered')) {
             setTimeout(function () {
@@ -57,7 +53,6 @@ $(function () {
     });
 
     $('.slick_sliders').on('beforeChange', function(event, slick, currentSlide, nextSlide){
-        console.log('is hovered?' , slick.$slider.find('[data-slick-index='+nextSlide+']').is('.hovered'))
         if (slick.$slider.find('[data-slick-index='+nextSlide+']').is('.hovered')) {
             setTimeout(function () {
                 $current_slider.find('.delete_slide').show();
@@ -74,18 +69,13 @@ $(function () {
 
     /* Load file to slider */
     window.loadFile = function (e) {
-        // слайдер с которым сейчас работаем
         $selected_slider = $element_clicked.parents('.slick-slider');
-        // url загруженной фото в хранилище браузера
         console.log('e.target.files[0] ', e.target.files[0]);
         if (e.target.files[0] != undefined) {
             var file_url = URL.createObjectURL(e.target.files[0]);
-            // добавление слайда в слайдер.
             $selected_slider.slick('slickAdd', '<img class="img_original" src="' + file_url + '">', '0');
-            // номер последнего добавленно слайда
             lastSlide = $selected_slider.find('.slick-slide').not('.slick-cloned').last().data().slickIndex;
             console.log(lastSlide);
-            // перемотка к добавленному слайду.
             $selected_slider.slick('slickGoTo', lastSlide)
             addHover();
         }
@@ -102,7 +92,6 @@ $(function () {
         $current_slider = $target.parents('.slick-slider');
         console.log($current_slider)
         $current_slider.find('img.img_original.slick-slide.slick-current.slick-active').addClass('hovered');
-        // добавляем тег удаления слайда
         if (!$current_slider.find('.delete_slide').is('.delete_slide')) {
             $current_slider.prepend(delete_tag);
             $current_slider.find('img.delete_slide').on('click', function (e) {
@@ -121,25 +110,18 @@ $(function () {
     function hoverOut(e) {
         let $target = $(e.target);
         let $targetOut = $(document.elementFromPoint(e.clientX, e.clientY));
-
         // for mobile
         if ($(window).width() < 640 ) {
             $current_slider = $targetOut.parents('.slick-slider');
         }
-
-        console.log('$targetOut.is(\'body\')', $targetOut.is('body'));
-        console.log('$targetOut)', $targetOut);
-
         if ($targetOut.is('.right.slick-arrow') || $targetOut.is('svg') || $targetOut.is('.left.slick-arrow')) {
             $current_slider.find('.delete_slide').hide();
             return false;
         }
-
         console.log('$targetOut', $(document.elementFromPoint(e.pageX, e.pageY)))
         if ($targetOut.is('.delete_slide')) {
             return false;
         } else {
-            console.log('Работаем с этим слайдером $current_slider',$current_slider);
             $current_slider.find('img.img_original.slick-slide.slick-current.slick-active').removeClass('hovered');
             $current_slider.find('.delete_slide').hide();
         }
